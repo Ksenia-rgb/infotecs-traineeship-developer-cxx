@@ -2,14 +2,27 @@
 
 #include "logger.hpp"
 
-void tecslog::init(const std::string& filename, Level min_level)
+void tecslog::init(const std::string& filename, Level level)
 {
   Logger& logger = Logger::instance();
   logger.setFile(filename);
-  logger.setLevel(min_level);
+  logger.setLevel(level);
+}
+
+void tecslog::init(const std::string& filename, const std::string& level)
+{
+  Logger& logger = Logger::instance();
+  logger.setFile(filename);
+  logger.setLevel(level);
 }
 
 void tecslog::setLevel(Level level)
+{
+  Logger& logger = Logger::instance();
+  logger.setLevel(level);
+}
+
+void tecslog::setLevel(const std::string& level)
 {
   Logger& logger = Logger::instance();
   logger.setLevel(level);
