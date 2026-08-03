@@ -1,9 +1,9 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include <string>
 #include <fstream>
 #include <mutex>
+#include <string>
 
 #include <tecslog/types.hpp>
 
@@ -26,7 +26,8 @@ namespace tecslog
     static const std::string default_filename_;
     static const Level default_level_;
 
-    std::string filename_;
+    std::string config_filename_;
+    std::string open_filename_;
     Level level_;
     std::ofstream out_;
 
@@ -39,6 +40,7 @@ namespace tecslog
     Logger& operator=(const Logger&) = delete;
 
     std::error_code baseLog(Level level, const std::string& message);
+    std::error_code ensureFileOpen();
   };
 }
 
