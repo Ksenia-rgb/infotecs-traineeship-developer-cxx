@@ -4,7 +4,7 @@
 #include <string>
 #include <system_error>
 
-#include "types.hpp"
+#include <tecslog/types.hpp>
 
 namespace tecslog
 {

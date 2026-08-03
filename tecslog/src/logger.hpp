@@ -1,11 +1,11 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include "../include/tecslog/types.hpp"
-
 #include <string>
 #include <fstream>
 #include <mutex>
+
+#include <tecslog/types.hpp>
 
 namespace tecslog
 {
