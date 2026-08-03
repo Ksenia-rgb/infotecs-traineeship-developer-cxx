@@ -1,0 +1,7 @@
+set(target "${PROG_LIBRARY}")
+
+set(srcs src/logger.cpp src/tecslog.cpp)
+
+add_library(${target} STATIC ${srcs})
+target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
