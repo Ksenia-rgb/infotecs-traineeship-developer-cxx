@@ -32,3 +32,15 @@ std::error_code tecslog::error(const std::string& message)
   Logger& logger = Logger::instance();
   return logger.error(message);
 }
+
+std::error_code tecslog::log(Level level, const std::string& message)
+{
+  Logger& logger = Logger::instance();
+  return logger.log(level, message);
+}
+
+std::error_code tecslog::log(const std::string& level, const std::string& message)
+{
+  Logger& logger = Logger::instance();
+  return logger.log(level, message);
+}

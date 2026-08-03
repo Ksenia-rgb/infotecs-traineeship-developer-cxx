@@ -2,6 +2,7 @@
 
 #include <ctime>
 #include <iomanip>
+#include <optional>
 #include <unordered_map>
 
 namespace
@@ -12,12 +13,28 @@ namespace
     return out << std::put_time(std::localtime(&now_c), "%d.%m.%Y %H:%M:%S");
   }
 
-  std::string levelToStr(tecslog::Level level)
+  std::optional< std::string > levelToStr(tecslog::Level level)
   {
     static const std::unordered_map< tecslog::Level, std::string > level_map = {
       {tecslog::Level::INFO, "INFO"},
       {tecslog::Level::WARNING, "WARNING"},
       {tecslog::Level::ERROR, "ERROR"}
+    };
+
+    auto level_iter = level_map.find(level);
+    if (level_iter != level_map.end())
+    {
+      return level_iter->second;
+    }
+    return {};
+  }
+
+  std::optional< tecslog::Level > strToLevel(const std::string& level)
+  {
+    static const std::unordered_map< std::string, tecslog::Level > level_map = {
+      {"INFO", tecslog::Level::INFO},
+      {"WARNING", tecslog::Level::WARNING},
+      {"ERROR", tecslog::Level::ERROR}
     };
 
     auto level_iter = level_map.find(level);
@@ -92,20 +109,50 @@ void tecslog::Logger::reset()
 
 std::error_code tecslog::Logger::info(const std::string& message)
 {
-  return baseLog(Level::INFO, message);
+  return log(Level::INFO, message);
 }
 
 std::error_code tecslog::Logger::warning(const std::string& message)
 {
-  return baseLog(Level::WARNING, message);
+  return log(Level::WARNING, message);
 }
 
 std::error_code tecslog::Logger::error(const std::string& message)
 {
-  return baseLog(Level::ERROR, message);
+  return log(Level::ERROR, message);
 }
 
-std::error_code tecslog::Logger::baseLog(Level level, const std::string& message)
+std::error_code tecslog::Logger::log(Level level, const std::string& message)
+{
+  std::optional< std::string > str_level = levelToStr(level);
+  if (!str_level.has_value())
+  {
+    return std::make_error_code(std::errc::invalid_argument);
+  }
+
+  if (level >= level_)
+  {
+    return uncheckLevelLog(str_level.value(), message);
+  }
+  return {};
+}
+
+std::error_code tecslog::Logger::log(const std::string& str_level, const std::string& message)
+{
+  std::optional< Level > level = strToLevel(str_level);
+  if (!level.has_value())
+  {
+    return std::make_error_code(std::errc::invalid_argument);
+  }
+
+  if (level.value() >= level_)
+  {
+    return uncheckLevelLog(str_level, message);
+  }
+  return {};
+}
+
+std::error_code tecslog::Logger::uncheckLevelLog(const std::string& str_level, const std::string& message)
 {
   std::error_code file_code = ensureFileOpen();
   if (file_code)
@@ -113,20 +160,11 @@ std::error_code tecslog::Logger::baseLog(Level level, const std::string& message
     return file_code;
   }
 
-  std::string str_level = levelToStr(level);
-  if (str_level.empty())
+  std::lock_guard< std::mutex > lock(mutex_file);
+  out_now_time(out_) << " [" << str_level << "] " << message << '\n';
+  if (!out_)
   {
-    return std::make_error_code(std::errc::invalid_argument);
-  }
-
-  if (level >= level_)
-  {
-    std::lock_guard< std::mutex > lock(mutex_file);
-    out_now_time(out_) << " " << str_level << " " << message << '\n';
-    if (!out_)
-    {
-      return std::make_error_code(std::errc::io_error);
-    }
+    return std::make_error_code(std::errc::io_error);
   }
   return {};
 }
