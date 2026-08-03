@@ -108,7 +108,7 @@ std::error_code tecslog::Logger::error(const std::string& message)
 std::error_code tecslog::Logger::baseLog(Level level, const std::string& message)
 {
   std::error_code file_code = ensureFileOpen();
-  if (!file_code)
+  if (file_code)
   {
     return file_code;
   }
@@ -142,7 +142,7 @@ std::error_code tecslog::Logger::ensureFileOpen()
     return std::make_error_code(std::errc::no_such_file_or_directory);
   }
   out_.close();
-  out_.open(config_filename_);
+  out_.open(config_filename_, std::ios::app);
   open_filename_ = config_filename_;
   return !out_.is_open() ? std::make_error_code(std::errc::no_such_file_or_directory) : std::error_code{};
 }
