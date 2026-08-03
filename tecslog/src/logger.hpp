@@ -22,6 +22,8 @@ namespace tecslog
     std::error_code info(const std::string& message);
     std::error_code warning(const std::string& message);
     std::error_code error(const std::string& message);
+    std::error_code log(Level level, const std::string& message);
+    std::error_code log(const std::string& str_level, const std::string& message);
   private:
     static const std::string default_filename_;
     static const Level default_level_;
@@ -39,7 +41,7 @@ namespace tecslog
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
-    std::error_code baseLog(Level level, const std::string& message);
+    std::error_code uncheckLevelLog(const std::string& str_level, const std::string& message);
     std::error_code ensureFileOpen();
   };
 }

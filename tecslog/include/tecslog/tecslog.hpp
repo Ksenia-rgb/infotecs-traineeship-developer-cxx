@@ -13,6 +13,8 @@ namespace tecslog
   std::error_code info(const std::string& message);
   std::error_code warning(const std::string& message);
   std::error_code error(const std::string& message);
+  std::error_code log(Level level, const std::string& message);
+  std::error_code log(const std::string& level, const std::string& message);
 }
 
 #endif
