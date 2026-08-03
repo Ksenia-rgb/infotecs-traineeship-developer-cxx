@@ -1,4 +1,5 @@
-#include "../include/tecslog/facade.hpp"
+#include <tecslog/tecslog.hpp>
+
 #include "logger.hpp"
 
 std::error_code tecslog::init(const std::string& filename, Level min_level)
