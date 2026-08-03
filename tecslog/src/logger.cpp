@@ -73,15 +73,6 @@ tecslog::Logger& tecslog::Logger::instance()
   return logger_instance;
 }
 
-void tecslog::Logger::setLevel(Level level)
-{
-  if (level_ != level)
-  {
-    std::lock_guard< std::mutex > lock(mutex_level);
-    level_ = level;
-  }
-}
-
 void tecslog::Logger::setFile(const std::string& filename)
 {
   if (config_filename_ != filename)
@@ -94,6 +85,25 @@ void tecslog::Logger::setFile(const std::string& filename)
 bool tecslog::Logger::isFileOpen()
 {
   return out_.is_open();
+}
+
+void tecslog::Logger::setLevel(Level level)
+{
+  if (level_ != level)
+  {
+    std::lock_guard< std::mutex > lock(mutex_level);
+    level_ = level;
+  }
+}
+
+void tecslog::Logger::setLevel(const std::string& str_level)
+{
+  std::optional< Level > level = strToLevel(str_level);
+
+  if (level.has_value())
+  {
+    setLevel(level.value());
+  }
 }
 
 void tecslog::Logger::reset()

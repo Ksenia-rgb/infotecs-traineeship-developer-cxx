@@ -16,7 +16,8 @@ namespace tecslog
 
     void setFile(const std::string& filename);
     bool isFileOpen();
-    void setLevel(Level min_level);
+    void setLevel(Level level);
+    void setLevel(const std::string& str_level);
     void reset();
 
     std::error_code info(const std::string& message);
