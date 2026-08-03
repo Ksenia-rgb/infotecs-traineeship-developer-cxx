@@ -1,5 +1,5 @@
-#ifndef TECSLOG_FACADE_HPP
-#define TECSLOG_FACADE_HPP
+#ifndef TECSLOG_HPP
+#define TECSLOG_HPP
 
 #include <string>
 #include <system_error>
