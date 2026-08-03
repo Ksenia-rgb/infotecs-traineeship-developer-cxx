@@ -1,11 +1,17 @@
 #include "../include/tecslog/facade.hpp"
 #include "logger.hpp"
 
-void tecslog::init(const std::string& filename, Level min_level)
+std::error_code tecslog::init(const std::string& filename, Level min_level)
 {
   Logger& logger = Logger::instance();
   logger.setFile(filename);
   logger.setLevel(min_level);
+
+  if (!logger.isFileOpen())
+  {
+    return std::make_error_code(std::errc::no_such_file_or_directory);
+  }
+  return {};
 }
 
 void tecslog::setLevel(Level level)

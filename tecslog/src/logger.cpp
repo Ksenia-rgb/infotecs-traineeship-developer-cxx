@@ -35,10 +35,19 @@ const tecslog::Level tecslog::Logger::default_level_ = tecslog::Level::INFO;
 tecslog::Logger::Logger():
   filename_(default_filename_),
   level_(default_level_),
-  out_(filename_),
+  out_(filename_, std::ios::app),
   mutex_level(),
   mutex_file()
 {}
+
+tecslog::Logger::~Logger()
+{
+  if (isFileOpen())
+  {
+    out_.flush();
+    out_.close();
+  }
+}
 
 tecslog::Logger& tecslog::Logger::instance()
 {
@@ -58,8 +67,14 @@ void tecslog::Logger::setFile(const std::string& filename)
   {
     std::lock_guard< std::mutex > lock(mutex_file);
     filename_ = filename;
-    out_.open(filename);
+    out_.close();
+    out_.open(filename, std::ios::app);
   }
+}
+
+bool tecslog::Logger::isFileOpen()
+{
+  return out_.is_open();
 }
 
 void tecslog::Logger::reset()
@@ -87,9 +102,7 @@ std::error_code tecslog::Logger::error(const std::string& message)
 
 std::error_code tecslog::Logger::baseLog(Level level, const std::string& message)
 {
-  std::lock_guard< std::mutex > lock(mutex_file);
-
-  if (!out_.is_open())
+  if (!isFileOpen())
   {
     return std::make_error_code(std::errc::no_such_file_or_directory);
   }
@@ -102,7 +115,12 @@ std::error_code tecslog::Logger::baseLog(Level level, const std::string& message
 
   if (level >= level_)
   {
-    out_now_time(out_) << " " << str_level << " " << message << std::endl;
+    std::lock_guard< std::mutex > lock(mutex_file);
+    out_now_time(out_) << " " << str_level << " " << message << '\n';
+    if (!out_)
+    {
+      return std::make_error_code(std::errc::io_error);
+    }
   }
   return {};
 }

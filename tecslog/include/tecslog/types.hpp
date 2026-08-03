@@ -7,8 +7,7 @@ namespace tecslog
   {
     INFO,
     WARNING,
-    ERROR,
-    LAST
+    ERROR
   };
 }
 

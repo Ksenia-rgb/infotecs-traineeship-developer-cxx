@@ -15,6 +15,7 @@ namespace tecslog
     static Logger& instance();
 
     void setFile(const std::string& filename);
+    bool isFileOpen();
     void setLevel(Level min_level);
     void reset();
 
@@ -33,6 +34,7 @@ namespace tecslog
     std::mutex mutex_file;
 
     Logger();
+    ~Logger();
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
