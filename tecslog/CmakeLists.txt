@@ -2,6 +2,17 @@ set(target "${PROG_LIBRARY}")
 
 set(srcs src/logger.cpp src/tecslog.cpp)
 
-add_library(${target} STATIC ${srcs})
-target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_library(${target}_object OBJECT ${srcs})
+set_target_properties(${target}_object PROPERTIES POSITION_INDEPENDENT_CODE ON
+)
+
+target_include_directories(${target}_object PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${target}_object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+if (BUILD_SHARED_LIBS)
+  add_library(${target}_shared SHARED)
+  target_link_libraries(${target}_shared PUBLIC ${target}_object)
+else()
+  add_library(${target} STATIC)
+  target_link_libraries(${target} PUBLIC ${target}_object)
+endif()
