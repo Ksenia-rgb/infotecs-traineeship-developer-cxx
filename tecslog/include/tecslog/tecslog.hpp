@@ -8,7 +8,7 @@
 
 namespace tecslog
 {
-  std::error_code init(const std::string& filename, Level level);
+  void init(const std::string& filename, Level level);
   void setLevel(Level level);
   std::error_code info(const std::string& message);
   std::error_code warning(const std::string& message);

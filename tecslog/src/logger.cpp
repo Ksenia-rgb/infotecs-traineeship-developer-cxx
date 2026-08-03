@@ -29,15 +29,16 @@ namespace
   }
 }
 
-const std::string tecslog::Logger::default_filename_ = "tecslog.txt";
+const std::string tecslog::Logger::default_filename_ = "tecslog.log";
 const tecslog::Level tecslog::Logger::default_level_ = tecslog::Level::INFO;
 
 tecslog::Logger::Logger():
-  filename_(default_filename_),
+  config_filename_(default_filename_),
+  open_filename_(),
   level_(default_level_),
-  out_(filename_, std::ios::app),
-  mutex_level(),
-  mutex_file()
+  out_(),
+  mutex_file(),
+  mutex_level()
 {}
 
 tecslog::Logger::~Logger()
@@ -57,18 +58,19 @@ tecslog::Logger& tecslog::Logger::instance()
 
 void tecslog::Logger::setLevel(Level level)
 {
-  std::lock_guard< std::mutex > lock(mutex_level);
-  level_ = level;
+  if (level_ != level)
+  {
+    std::lock_guard< std::mutex > lock(mutex_level);
+    level_ = level;
+  }
 }
 
 void tecslog::Logger::setFile(const std::string& filename)
 {
-  if (filename_ != filename)
+  if (config_filename_ != filename)
   {
     std::lock_guard< std::mutex > lock(mutex_file);
-    filename_ = filename;
-    out_.close();
-    out_.open(filename, std::ios::app);
+    config_filename_ = filename;
   }
 }
 
@@ -81,8 +83,11 @@ void tecslog::Logger::reset()
 {
   std::lock_guard< std::mutex > lock_level(mutex_level);
   std::lock_guard< std::mutex > lock_file(mutex_file);
-  filename_ = default_filename_;
+  config_filename_ = default_filename_;
+  open_filename_ = "";
   level_ = default_level_;
+  out_.close();
+  out_ = std::ofstream();
 }
 
 std::error_code tecslog::Logger::info(const std::string& message)
@@ -102,9 +107,10 @@ std::error_code tecslog::Logger::error(const std::string& message)
 
 std::error_code tecslog::Logger::baseLog(Level level, const std::string& message)
 {
-  if (!isFileOpen())
+  std::error_code file_code = ensureFileOpen();
+  if (!file_code)
   {
-    return std::make_error_code(std::errc::no_such_file_or_directory);
+    return file_code;
   }
 
   std::string str_level = levelToStr(level);
@@ -123,4 +129,20 @@ std::error_code tecslog::Logger::baseLog(Level level, const std::string& message
     }
   }
   return {};
+}
+
+std::error_code tecslog::Logger::ensureFileOpen()
+{
+  if (out_.is_open() && config_filename_ == open_filename_)
+  {
+    return {};
+  }
+  if (!out_.is_open() && config_filename_ == open_filename_)
+  {
+    return std::make_error_code(std::errc::no_such_file_or_directory);
+  }
+  out_.close();
+  out_.open(config_filename_);
+  open_filename_ = config_filename_;
+  return !out_.is_open() ? std::make_error_code(std::errc::no_such_file_or_directory) : std::error_code{};
 }
