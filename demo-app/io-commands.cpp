@@ -85,7 +85,7 @@ std::error_code demo::logCommand(std::istream& in, std::ostream& out, LogInfo& i
     return std::make_error_code(std::errc::invalid_argument);
   }
   queue.push(info);
-  out << "[OK] log with message: \"" << info.message << "\" and level: " << str_level;
+  out << "[OK] log with message: \"" << info.message << "\" and level: " << info.level;
   return {};
 }
 
