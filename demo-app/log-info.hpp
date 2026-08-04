@@ -1,9 +1,10 @@
 #ifndef LOG_INFO_HPP
 #define LOG_INFO_HPP
 
-#include <iostream>
 #include <optional>
 #include <string>
+
+#include <tecslog/tecslog.hpp>
 
 namespace demo
 {
