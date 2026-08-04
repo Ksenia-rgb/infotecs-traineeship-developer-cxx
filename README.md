@@ -56,7 +56,7 @@ make test
 make test-verbose
 ```
 
-## Примеры использования
+## Примеры использования библиотеки
 ### Базовое использование
 ```c++
 #include <tecslog/tecslog.hpp>
