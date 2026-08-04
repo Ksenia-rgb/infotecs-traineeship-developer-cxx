@@ -20,8 +20,8 @@ namespace
       demo::LogInfo* log_info = queue.front();
       if (log_info)
       {
-        queue.pop();
         tecslog::log(log_info->level, log_info->message);
+        queue.pop();
       }
     }
   }
