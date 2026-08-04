@@ -3,8 +3,7 @@ set(target "${PROG_LIBRARY}")
 set(srcs src/logger.cpp src/tecslog.cpp)
 
 add_library(${target}_object OBJECT ${srcs})
-set_target_properties(${target}_object PROPERTIES POSITION_INDEPENDENT_CODE ON
-)
+set_target_properties(${target}_object PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(${target}_object PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(${target}_object PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)

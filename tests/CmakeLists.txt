@@ -1,0 +1,8 @@
+add_executable(test_tecslog test-tecslog.cpp)
+target_link_libraries(test_tecslog PRIVATE tecslog)
+
+add_executable(test_demo_app test-demo.cpp)
+target_link_libraries(test_demo_app PRIVATE tecslog demo-app)
+
+add_test(NAME test-tecslog COMMAND test_tecslog)
+add_test(NAME test-demo-app COMMAND test_demo_app)

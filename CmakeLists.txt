@@ -18,5 +18,21 @@ add_subdirectory(tests)
 
 add_custom_target(destroy
   COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}
-  COMMENT "Remove cmake build directory"
+  COMMENT "Removing cmake build directory..."
+)
+
+enable_testing()
+
+add_custom_target(test-lib
+  COMMAND ${CMAKE_CTEST_COMMAND} -R test-lib --verbose
+  DEPENDS test_lib
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Running library unit tests..."
+)
+
+add_custom_target(test-demo
+  COMMAND ${CMAKE_CTEST_COMMAND} -R test-demo --verbose
+  DEPENDS test_demo
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Running demo unit tests..."
 )
