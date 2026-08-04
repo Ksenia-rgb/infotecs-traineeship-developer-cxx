@@ -58,6 +58,7 @@ int main(int argc, char** argv)
     if (command_iter != command_map.end())
     {
       std::error_code code = command_iter->second(in, out);
+      out << '\n';
       if (code)
       {
         std::cerr << code.message() << '\n';
