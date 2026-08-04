@@ -10,10 +10,10 @@
 
 namespace demo
 {
-  std::error_code silenceCommand(std::istream& in, LogInfo& info);
-  std::error_code defaultCommand(std::istream& in);
-  std::error_code logCommand(std::istream& in, LogInfo& info, ThreadSafeQueue< LogInfo >& queue);
-  std::error_code helpCommand(std::ostream& out);
+  std::error_code silenceCommand(std::istream& in, std::ostream& out, LogInfo& info);
+  std::error_code defaultCommand(std::istream& in, std::ostream& out);
+  std::error_code logCommand(std::istream& in, std::ostream& out, LogInfo& info, ThreadSafeQueue< LogInfo >& queue);
+  std::error_code helpCommand(std::istream& in, std::ostream& out);
 }
 
 #endif

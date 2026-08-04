@@ -19,7 +19,7 @@ namespace
   }
 }
 
-std::error_code demo::silenceCommand(std::istream& in, LogInfo& info)
+std::error_code demo::silenceCommand(std::istream& in, std::ostream& out, LogInfo& info)
 {
   std::string str_level;
   std::error_code code = readWordTillEnd(in, str_level);
@@ -34,11 +34,11 @@ std::error_code demo::silenceCommand(std::istream& in, LogInfo& info)
     return std::make_error_code(std::errc::invalid_argument);
   }
   LogInfo::silence_level = level;
-  std::cout << "[OK] silence level is specified on level " << str_level << '\n';
+  out << "[OK] silence level is specified on " << str_level << '\n';
   return {};
 }
 
-std::error_code demo::defaultCommand(std::istream& in)
+std::error_code demo::defaultCommand(std::istream& in, std::ostream& out)
 {
   std::string str_level;
   std::error_code code = readWordTillEnd(in, str_level);
@@ -52,11 +52,11 @@ std::error_code demo::defaultCommand(std::istream& in)
   {
     return code;
   }
-  std::cout << "[OK] default level is specified on level " << str_level << '\n';
+  out << "[OK] default level is specified on " << str_level << '\n';
   return {};
 }
 
-std::error_code demo::logCommand(std::istream& in, LogInfo& info, ThreadSafeQueue< LogInfo >& queue)
+std::error_code demo::logCommand(std::istream& in, std::ostream& out, LogInfo& info, ThreadSafeQueue< LogInfo >& queue)
 {
   in >> std::quoted(info.message);
   if (!in)
@@ -66,7 +66,7 @@ std::error_code demo::logCommand(std::istream& in, LogInfo& info, ThreadSafeQueu
 
   std::string str_level;
   std::error_code code = readWordTillEnd(in, str_level);
-  if (code)
+  if (code && !str_level.empty())
   {
     return code;
   }
@@ -85,7 +85,7 @@ std::error_code demo::logCommand(std::istream& in, LogInfo& info, ThreadSafeQueu
     return std::make_error_code(std::errc::invalid_argument);
   }
   queue.push(info);
-  std::cout << "[OK] log with message: \"" << info.message << "\" and level: " << str_level << '\n';
+  out << "[OK] log with message: \"" << info.message << "\" and level: " << str_level;
   return {};
 }
 
@@ -97,6 +97,10 @@ std::error_code demo::helpCommand(std::ostream& out)
     << "\tlog <message> <level>\t= Log message with level\n"
     << "\tThe <level> may not be specified if it was specified by the `silence` command.\n"
     << "\tIn such case log will have <level>, specified as `silence` <level>\n"
-    << "\tIf you did not specify <level> and not use `silence`, command is invalid\n";
+    << "\tIf you did not specify <level> and not use `silence`, command is invalid";
+
+  out << "Log levels: ";
+  tecslog::printPossibleLevels(out);
+
   return {};
 }

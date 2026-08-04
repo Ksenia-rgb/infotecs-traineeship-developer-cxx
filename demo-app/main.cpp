@@ -29,6 +29,8 @@ namespace
 
 int main(int argc, char** argv)
 {
+  using namespace std::placeholders;
+
   if (argc != 3)
   {
     std::cerr << "Incorrect programm argument count\n";
@@ -40,19 +42,22 @@ int main(int argc, char** argv)
   std::thread logger(logFromQueue, std::ref(queue));
 
   demo::LogInfo info;
-  std::unordered_map< std::string, std::function< std::error_code() > > command_map;
-  command_map["silence"] = std::bind(demo::silenceCommand, std::ref(std::cin), std::ref(info));
-  command_map["default"] = std::bind(demo::defaultCommand, std::ref(std::cin));
-  command_map["log"] = std::bind(demo::logCommand, std::ref(std::cin), std::ref(info), std::ref(queue));
-  command_map["help"] = std::bind(demo::helpCommand, std::ref(std::cout));
+  std::unordered_map< std::string, std::function< std::error_code(std::istream&, std::ostream&) > > command_map;
+  command_map["silence"] = std::bind(demo::silenceCommand, _1, _2, std::ref(info));
+  command_map["default"] = std::bind(demo::defaultCommand, _1, _2);
+  command_map["log"] = std::bind(demo::logCommand, _1, _2, std::ref(info), std::ref(queue));
+  command_map["help"] = std::bind(demo::helpCommand, _1, _2);
+
+  std::istream& in = std::cin;
+  std::ostream& out = std::cout;
 
   std::string command;
-  while (std::cin >> command)
+  while (in >> command)
   {
     auto command_iter = command_map.find(command);
     if (command_iter != command_map.end())
     {
-      std::error_code code = command_iter->second();
+      std::error_code code = command_iter->second(in, out);
       if (code)
       {
         std::cerr << code.message() << '\n';
