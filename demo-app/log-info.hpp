@@ -10,10 +10,9 @@ namespace demo
   struct LogInfo
   {
     std::string message;
-    std::string level;
-    std::optional< std::string > silence_level;
+    tecslog::Level level;
+    static std::optional< tecslog::Level > silence_level;
   };
-  std::istream& operator>>(std::istream& in, LogInfo& info);
 }
 
 #endif

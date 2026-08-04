@@ -40,41 +40,34 @@ int main(int argc, char** argv)
   std::thread logger(logFromQueue, std::ref(queue));
 
   demo::LogInfo info;
-  std::unordered_map< std::string, std::function< std::error_code() > > command_map = {
-    {"silence", std::bind(demo::silenceCommand, std::ref(std::cin), std::ref(std::cout), std::ref(info))},
-    {"default", std::bind(demo::defaultCommand, std::ref(std::cin), std::ref(std::cout))},
-    {"help", std::bind(demo::helpCommand, std::ref(std::cout))}
-  };
+  std::unordered_map< std::string, std::function< std::error_code() > > command_map;
+  command_map["silence"] = std::bind(demo::silenceCommand, std::ref(std::cin), std::ref(info));
+  command_map["default"] = std::bind(demo::defaultCommand, std::ref(std::cin));
+  command_map["help"] = std::bind(demo::helpCommand, std::ref(std::cout));
 
   std::string buffer;
   while (std::cin >> std::quoted(buffer))
   {
     std::error_code code;
-    auto command_iter = command_map.find(buffer);
-    if (command_iter != command_map.end())
+    if (auto command_iter = command_map.find(buffer); command_iter != command_map.end())
     {
       code = command_iter->second();
     }
     else
     {
       info.message = buffer;
-      if (std::cin >> buffer)
+      code = demo::logCommand(std::cin, info);
+      if (!code)
       {
-        info.level = buffer;
         queue.push(std::move(info));
-      }
-      else if (info.silence_level.has_value())
-      {
-        info.level = info.silence_level.value();
-        queue.push(std::move(info));
-      }
-      else
-      {
-        std::cerr << "<INVALID COMMAND> specify log level or use silence command\n";
       }
     }
     std::cin.clear();
     std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
+    if (code)
+    {
+      std::cerr << code.message() << '\n';
+    }
   }
 
   queue.forceStop();
