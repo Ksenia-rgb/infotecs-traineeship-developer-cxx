@@ -29,11 +29,11 @@ int main(int argc, char** argv)
   if (argc != 3)
   {
     std::cerr << "Incorrect programm argument count\n";
+    return 1;
   }
   tecslog::init(argv[1], argv[2]);
 
   demo::ThreadSafeQueue< demo::LogInfo > queue;
-
   std::thread logger(logFromQueue, std::ref(queue));
 
   demo::LogInfo info("INFO");

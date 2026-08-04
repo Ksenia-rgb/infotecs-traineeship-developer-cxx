@@ -23,7 +23,7 @@ std::istream& demo::operator>>(std::istream& in, LogInfo& info)
   }
 
   in >> info.level;
-  if (!in)
+  if (in.fail() && !in.eof())
   {
     info.level = info.default_level;
     in.clear();
