@@ -17,7 +17,7 @@ namespace
   std::string strToupper(const std::string& str)
   {
     std::string upper;
-    std::transform(str.begin(), str.end(), upper.begin(),
+    std::transform(str.begin(), str.end(), std::back_inserter(upper),
       [](unsigned char c){ return std::toupper(c); }
     );
     return upper;
