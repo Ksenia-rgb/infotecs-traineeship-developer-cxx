@@ -2,12 +2,6 @@
 
 #include <iomanip>
 
-demo::LogInfo::LogInfo(const std::string& default_level_new):
-  message(),
-  level(),
-  default_level(default_level_new)
-{}
-
 std::istream& demo::operator>>(std::istream& in, LogInfo& info)
 {
   std::istream::sentry sentry(in);
@@ -23,9 +17,9 @@ std::istream& demo::operator>>(std::istream& in, LogInfo& info)
   }
 
   in >> info.level;
-  if (in.fail() && !in.eof())
+  if (in.fail() && !in.eof() && info.silence_level.has_value())
   {
-    info.level = info.default_level;
+    info.level = info.silence_level.value();
     in.clear();
   }
   return in;
