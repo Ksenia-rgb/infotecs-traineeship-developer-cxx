@@ -89,7 +89,7 @@ std::error_code demo::logCommand(std::istream& in, std::ostream& out, LogInfo& i
   return {};
 }
 
-std::error_code demo::helpCommand(std::ostream& out)
+std::error_code demo::helpCommand(std::istream& in, std::ostream& out)
 {
   out << "Commands:\n"
     << "\tsilence <level>\t= Specify silence log level\n"
