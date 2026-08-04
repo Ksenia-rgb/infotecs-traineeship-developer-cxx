@@ -34,7 +34,7 @@ std::error_code demo::silenceCommand(std::istream& in, std::ostream& out, LogInf
     return std::make_error_code(std::errc::invalid_argument);
   }
   LogInfo::silence_level = level;
-  out << "[OK] silence level is specified on " << str_level << '\n';
+  out << "[OK] silence level is specified on " << str_level;
   return {};
 }
 
@@ -52,7 +52,7 @@ std::error_code demo::defaultCommand(std::istream& in, std::ostream& out)
   {
     return code;
   }
-  out << "[OK] default level is specified on " << str_level << '\n';
+  out << "OK: default level is specified on " << str_level;
   return {};
 }
 
@@ -85,7 +85,7 @@ std::error_code demo::logCommand(std::istream& in, std::ostream& out, LogInfo& i
     return std::make_error_code(std::errc::invalid_argument);
   }
   queue.push(info);
-  out << "[OK] log with message: \"" << info.message << "\" and level: " << info.level;
+  out << "OK: log with message: \"" << info.message << "\" and level: " << info.level;
   return {};
 }
 
@@ -99,7 +99,7 @@ std::error_code demo::helpCommand(std::istream& in, std::ostream& out)
     << "\tIn such case log will have <level>, specified as `silence` <level>\n"
     << "\tIf you did not specify <level> and not use `silence`, command is invalid";
 
-  out << "Log levels: ";
+  out << "Log levels:\n";
   tecslog::printPossibleLevels(out);
 
   return {};

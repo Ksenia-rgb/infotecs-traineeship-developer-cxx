@@ -41,7 +41,7 @@ std::ostream& tecslog::printPossibleLevels(std::ostream& out)
   out << Logger::levelToStr(Level::MIN);
   for (int i = static_cast< int >(Level::MIN) + 1; i < static_cast< int >(Level::MAX); i++)
   {
-    out << ' ' << Logger::levelToStr(static_cast< Level >(i));
+    out << '\n' << i << ' ' << Logger::levelToStr(static_cast< Level >(i));
   }
   return out;
 }
