@@ -2,6 +2,7 @@
 #define LOG_INFO_HPP
 
 #include <iostream>
+#include <optional>
 #include <string>
 
 namespace demo
@@ -9,12 +10,9 @@ namespace demo
   struct LogInfo
   {
     std::string message;
-    std::string level;
-    std::string default_level;
-
-    LogInfo(const std::string& default_level_new);
+    tecslog::Level level;
+    static std::optional< tecslog::Level > silence_level;
   };
-  std::istream& operator>>(std::istream& in, LogInfo& info);
 }
 
 #endif

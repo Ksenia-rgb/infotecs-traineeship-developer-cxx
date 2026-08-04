@@ -7,7 +7,9 @@ namespace tecslog
   {
     INFO,
     WARNING,
-    ERROR
+    ERROR,
+    MIN = INFO,
+    MAX = ERROR
   };
 }
 
