@@ -155,7 +155,7 @@ std::error_code tecslog::Logger::uncheckLevelLog(const std::string& str_level, c
   }
 
   std::lock_guard< std::mutex > lock(mutex_file);
-  out_now_time(out_) << " [" << str_level << "] " << message << '\n';
+  out_now_time(out_) << " [" << str_level << "] " << message << std::endl;
   if (!out_)
   {
     return std::make_error_code(std::errc::io_error);

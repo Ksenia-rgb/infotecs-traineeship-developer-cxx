@@ -5,22 +5,14 @@
 std::error_code tecslog::init(const std::string& filename, Level level)
 {
   Logger& logger = Logger::instance();
-  std::error_code code = logger.setFile(filename);
-  if (code)
-  {
-    return code;
-  }
+  logger.setFile(filename);
   return logger.setLevel(level);
 }
 
 std::error_code tecslog::init(const std::string& filename, const std::string& level)
 {
   Logger& logger = Logger::instance();
-  std::error_code code = logger.setFile(filename);
-  if (code)
-  {
-    return code;
-  }
+  logger.setFile(filename);
   return logger.setLevel(level);
 }
 
@@ -44,16 +36,6 @@ std::ostream& tecslog::printPossibleLevels(std::ostream& out)
     out << '\n' << i << ' ' << Logger::levelToStr(static_cast< Level >(i));
   }
   return out;
-}
-
-std::string tecslog::getMinLevel()
-{
-  return Logger::levelToStr(Level::MIN);
-}
-
-std::string tecslog::getMaxLevel()
-{
-  return Logger::levelToStr(Level::MAX);
 }
 
 std::optional< tecslog::Level > tecslog::parseLevel(const std::string& str_level)
