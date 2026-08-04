@@ -43,31 +43,26 @@ int main(int argc, char** argv)
   std::unordered_map< std::string, std::function< std::error_code() > > command_map;
   command_map["silence"] = std::bind(demo::silenceCommand, std::ref(std::cin), std::ref(info));
   command_map["default"] = std::bind(demo::defaultCommand, std::ref(std::cin));
+  command_map["log"] = std::bind(demo::logCommand, std::ref(std::cin), std::ref(info), std::ref(queue));
   command_map["help"] = std::bind(demo::helpCommand, std::ref(std::cout));
 
-  std::string buffer;
-  while (std::cin >> std::quoted(buffer))
+  std::string command;
+  while (std::cin >> command)
   {
-    std::error_code code;
-
-    if (auto command_iter = command_map.find(buffer); command_iter != command_map.end())
+    auto command_iter = command_map.find(command);
+    if (command_iter != command_map.end())
     {
-      code = command_iter->second();
+      std::error_code code = command_iter->second();
+      if (code)
+      {
+        std::cerr << code.message() << '\n';
+      }
     }
     else
     {
-      info.message = buffer;
-      code = demo::logCommand(std::cin, info);
-      if (!code)
-      {
-        queue.push(std::move(info));
-      }
-    }
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
-    if (code)
-    {
-      std::cerr << code.message() << '\n';
+      std::cerr << "[INVALID COMMAND]\n";
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
   }
 
