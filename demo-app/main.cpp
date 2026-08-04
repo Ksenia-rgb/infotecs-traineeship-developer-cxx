@@ -49,6 +49,7 @@ int main(int argc, char** argv)
   while (std::cin >> std::quoted(buffer))
   {
     std::error_code code;
+
     if (auto command_iter = command_map.find(buffer); command_iter != command_map.end())
     {
       code = command_iter->second();
