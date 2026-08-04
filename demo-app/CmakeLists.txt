@@ -1,0 +1,9 @@
+set(target demo-app)
+
+add_executable(${target} main.cpp log-info.cpp io-commands.cpp)
+
+if (BUILD_SHARED_LIBS)
+  target_link_libraries(${target} PRIVATE ${PROG_LIBRARY}_shared)
+else()
+  target_link_libraries(${target} PRIVATE ${PROG_LIBRARY})
+endif()
