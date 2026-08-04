@@ -2,30 +2,58 @@
 
 #include "logger.hpp"
 
-void tecslog::init(const std::string& filename, Level level)
+std::error_code tecslog::init(const std::string& filename, Level level)
 {
   Logger& logger = Logger::instance();
-  logger.setFile(filename);
-  logger.setLevel(level);
+  std::error_code code = logger.setFile(filename);
+  if (code)
+  {
+    return code;
+  }
+  return logger.setLevel(level);
 }
 
-void tecslog::init(const std::string& filename, const std::string& level)
+std::error_code tecslog::init(const std::string& filename, const std::string& level)
 {
   Logger& logger = Logger::instance();
-  logger.setFile(filename);
-  logger.setLevel(level);
+  std::error_code code = logger.setFile(filename);
+  if (code)
+  {
+    return code;
+  }
+  return logger.setLevel(level);
 }
 
-void tecslog::setLevel(Level level)
+std::error_code tecslog::setLevel(Level level)
 {
   Logger& logger = Logger::instance();
-  logger.setLevel(level);
+  return logger.setLevel(level);
 }
 
-void tecslog::setLevel(const std::string& level)
+std::error_code tecslog::setLevel(const std::string& level)
 {
   Logger& logger = Logger::instance();
-  logger.setLevel(level);
+  return logger.setLevel(level);
+}
+
+std::ostream& tecslog::printPossibleLevels(std::ostream& out)
+{
+  out << Logger::levelToStr(Level::MIN);
+  for (int i = static_cast< int >(Level::MIN) + 1; i < static_cast< int >(Level::MAX); i++)
+  {
+    out << ' ' << Logger::levelToStr(static_cast< Level >(i));
+  }
+  return out;
+}
+
+std::string tecslog::getMinLevel()
+{
+  return Logger::levelToStr(Level::MIN);
+}
+
+std::string tecslog::getMaxLevel()
+{
+  return Logger::levelToStr(Level::MAX);
 }
 
 std::error_code tecslog::info(const std::string& message)
