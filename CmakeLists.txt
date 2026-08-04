@@ -15,3 +15,8 @@ set(PROG_LIBRARY "tecslog")
 add_subdirectory(tecslog)
 add_subdirectory(demo-app)
 add_subdirectory(tests)
+
+add_custom_target(destroy
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}
+  COMMENT "Remove cmake build directory"
+)
