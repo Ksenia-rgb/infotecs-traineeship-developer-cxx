@@ -1,6 +1,7 @@
 #ifndef TECSLOG_HPP
 #define TECSLOG_HPP
 
+#include <optional>
 #include <string>
 #include <system_error>
 
@@ -16,6 +17,7 @@ namespace tecslog
   std::ostream& printPossibleLevels(std::ostream& out);
   std::string getMinLevel();
   std::string getMaxLevel();
+  std::optional< Level > parseLevel(const std::string& str_level);
 
   std::error_code info(const std::string& message);
   std::error_code warning(const std::string& message);
