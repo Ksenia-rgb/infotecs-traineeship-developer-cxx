@@ -1,10 +1,17 @@
 #include "io-commands.hpp"
 
+#include <sstream>
+
 std::error_code demo::silenceCommand(std::istream& in, LogInfo& info)
 {
+  std::string buffer;
+  std::getline(in, buffer);
+  std::stringstream sin(buffer);
+
   std::string str_level;
-  in >> str_level;
-  if (in)
+  sin >> str_level;
+
+  if (sin)
   {
     auto level = tecslog::parseLevel(str_level);
     if (!level.has_value())
@@ -18,11 +25,16 @@ std::error_code demo::silenceCommand(std::istream& in, LogInfo& info)
 
 std::error_code demo::defaultCommand(std::istream& in)
 {
-  std::string level;
-  in >> level;
-  if (in)
+  std::string buffer;
+  std::getline(in, buffer);
+  std::stringstream sin(buffer);
+
+  std::string str_level;
+  sin >> str_level;
+
+  if (sin)
   {
-    return tecslog::setLevel(level);
+    return tecslog::setLevel(str_level);
   }
   return std::make_error_code(std::errc::io_error);
 }
