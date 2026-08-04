@@ -92,12 +92,12 @@ std::error_code demo::logCommand(std::istream& in, std::ostream& out, LogInfo& i
 std::error_code demo::helpCommand(std::istream& in, std::ostream& out)
 {
   out << "Commands:\n"
-    << "\tsilence <level>\t= Specify silence log level\n"
-    << "\tdefault <level>\t= Specify default log level, logs with a lower level will not be recorded\n"
-    << "\tlog <message> <level>\t= Log message with level\n"
+    << "\t1 silence <level>\t= Specify silence log level\n"
+    << "\t2 default <level>\t= Specify default log level, logs with a lower level will not be recorded\n"
+    << "\t3 log <message> <level>\t= Log message with level\n"
     << "\tThe <level> may not be specified if it was specified by the `silence` command.\n"
     << "\tIn such case log will have <level>, specified as `silence` <level>\n"
-    << "\tIf you did not specify <level> and not use `silence`, command is invalid";
+    << "\tIf you did not specify <level> and not use `silence`, command is invalid\n\n";
 
   out << "Log levels:\n";
   tecslog::printPossibleLevels(out);
