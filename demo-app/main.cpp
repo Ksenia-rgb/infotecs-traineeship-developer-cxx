@@ -13,14 +13,18 @@
 
 namespace
 {
-  void logFromQueue(demo::ThreadSafeQueue< demo::LogInfo >& queue)
+  void logFromQueue(demo::ThreadSafeQueue< demo::LogInfo >& queue, std::error_code& code)
   {
     while (!queue.isForceStopped())
     {
       demo::LogInfo* log_info = queue.front();
       if (log_info)
       {
-        tecslog::log(log_info->level, log_info->message);
+        code = tecslog::log(log_info->level, log_info->message);
+        if (code)
+        {
+          queue.forceStop();
+        }
         queue.pop();
       }
     }
@@ -36,10 +40,15 @@ int main(int argc, char** argv)
     std::cerr << "Incorrect programm argument count\n";
     return 1;
   }
-  tecslog::init(argv[1], argv[2]);
+  if (tecslog::init(argv[1], argv[2]))
+  {
+    std::cerr << "Incorrect argument for lib initialization\n";
+    return 1;
+  }
 
   demo::ThreadSafeQueue< demo::LogInfo > queue;
-  std::thread logger(logFromQueue, std::ref(queue));
+  std::error_code logger_code;
+  std::thread logger(logFromQueue, std::ref(queue), std::ref(logger_code));
 
   demo::LogInfo info;
   std::unordered_map< std::string, std::function< std::error_code(std::istream&, std::ostream&) > > command_map;
@@ -52,7 +61,7 @@ int main(int argc, char** argv)
   std::ostream& out = std::cout;
 
   std::string command;
-  while (in >> command)
+  while (in >> command && !queue.isForceStopped())
   {
     auto command_iter = command_map.find(command);
     if (command_iter != command_map.end())
@@ -71,7 +80,13 @@ int main(int argc, char** argv)
       std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
   }
-
-  queue.forceStop();
+  if (queue.isForceStopped())
+  {
+    std::cerr << "Log error: " << logger_code.message() << '\n';
+  }
+  else
+  {
+    queue.forceStop();
+  }
   logger.join();
 }
