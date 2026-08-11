@@ -107,6 +107,16 @@ std::error_code tecslog::Logger::setLevel(const std::string& str_level)
   return std::make_error_code(std::errc::invalid_argument);
 }
 
+tecslog::Level tecslog::Logger::getDefaultLevel()
+{
+  return level_;
+}
+
+std::string tecslog::Logger::getLogFile()
+{
+  return config_filename_;
+}
+
 void tecslog::Logger::reset()
 {
   std::lock_guard< std::mutex > lock_level(mutex_level);
