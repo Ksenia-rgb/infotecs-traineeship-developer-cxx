@@ -4,20 +4,44 @@
 
 TEST_CASE(TecslogСorrectInitTest)
 {
-  std::error_code code = tecslog::init("test.log", tecslog::Level::WARNING);
-  return code.value() == 0;
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  std::error_code code = tecslog::init(filename, tecslog::Level::WARNING);
+  bool file = tecslog::getLogFile() == filename;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::WARNING;
+
+  return code.value() == 0 && file && level;
 }
 
 TEST_CASE(TecslogCorrectInitWithStrLevelTest)
 {
-  std::error_code code = tecslog::init("test.log", "INFO");
-  return code.value() == 0;
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  std::error_code code = tecslog::init(filename, "INFO");
+  bool file = tecslog::getLogFile() == filename;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::INFO;
+
+  return code.value() == 0 && file && level;
 }
 
 TEST_CASE(TecslogIncorrectInitWithStrLevelTest)
 {
-  std::error_code code = tecslog::init("test.log", "INCORRECT");
-  return code.value() != 0;
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  std::error_code code = tecslog::init(filename, "INCORRECT");
+  bool file = tecslog::getLogFile() == filename;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::INFO;
+
+  return code.value() != 0 && file && level;
 }
 
 TEST_CASE(TecslogIncorrectInitWithNonExistedFileTest)

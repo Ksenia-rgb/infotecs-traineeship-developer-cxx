@@ -7,6 +7,8 @@
 
 TEST_CASE(TecslogCorrectInfoWarnErrorTest)
 {
+  tecslog::reset();
+
   std::string filename = "test.log";
   test::TestFileGuard guard(filename);
 
@@ -28,6 +30,8 @@ TEST_CASE(TecslogCorrectInfoWarnErrorTest)
 
 TEST_CASE(TecslogErrorWithIncorrectFileTest)
 {
+  tecslog::reset();
+
   std::string filename_unreal = "logs/unreal-directory/test.log";
   std::string filename_default = tecslog::getLogFile();
   test::TestFileGuard guard_unreal(filename_unreal);
@@ -45,6 +49,8 @@ TEST_CASE(TecslogErrorWithIncorrectFileTest)
 
 TEST_CASE(TecslogInfoWarningErrorWithLowerDefaultLevelTest)
 {
+  tecslog::reset();
+
   std::string filename = "test.log";
   test::TestFileGuard guard(filename);
 
@@ -70,6 +76,8 @@ TEST_CASE(TecslogInfoWarningErrorWithLowerDefaultLevelTest)
 
 TEST_CASE(TecslogCorrectLogTest)
 {
+  tecslog::reset();
+
   std::string filename = "test.log";
   test::TestFileGuard guard(filename);
 
@@ -91,6 +99,8 @@ TEST_CASE(TecslogCorrectLogTest)
 
 TEST_CASE(TecslogLogWithCorrectStrLevelTest)
 {
+  tecslog::reset();
+
   std::string filename = "test.log";
   test::TestFileGuard guard(filename);
 
@@ -112,6 +122,8 @@ TEST_CASE(TecslogLogWithCorrectStrLevelTest)
 
 TEST_CASE(TecslogLogWithInorrectStrLevelTest)
 {
+  tecslog::reset();
+
   std::string filename = "test.log";
   test::TestFileGuard guard(filename);
 
