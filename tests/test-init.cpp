@@ -25,9 +25,3 @@ TEST_CASE(TecslogIncorrectInitWithNonExistedFileTest)
   std::error_code code = tecslog::init("logs/unreal-directory/test.log", tecslog::Level::ERROR);
   return code.value() != 0;
 }
-
-
-int main()
-{
-  return test::runAllTests();
-}

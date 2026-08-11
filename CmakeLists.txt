@@ -24,13 +24,13 @@ add_custom_target(destroy
 )
 
 add_custom_target(tests
-  DEPENDS test_tecslog
+  DEPENDS test_tecslog_init test_tecslog_level test_tecslog_log
   COMMENT "Building all tests..."
 )
 
 add_custom_target(test-verbose
   COMMAND ${CMAKE_CTEST_COMMAND} --verbose
-  DEPENDS test_tecslog
+  DEPENDS test_tecslog_init test_tecslog_level test_tecslog_log
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Running all tests with verbose output..."
 )

@@ -29,7 +29,7 @@ TEST_CASE(TecslogCorrectInfoWarnErrorTest)
 TEST_CASE(TecslogErrorWithIncorrectFileTest)
 {
   std::string filename_unreal = "logs/unreal-directory/test.log";
-  std::string filename_default = "tecslog.log";
+  std::string filename_default = tecslog::getLogFile();
   test::TestFileGuard guard_unreal(filename_unreal);
   test::TestFileGuard guard(filename_default);
 
