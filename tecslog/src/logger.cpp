@@ -69,7 +69,7 @@ std::error_code tecslog::Logger::setFile(const std::string& filename)
   std::error_code code;
   fs::path file_path{filename};
   fs::path dir_path = file_path.parent_path();
-  if (!fs::exists(dir_path, code))
+  if (!dir_path.empty() && !fs::exists(dir_path, code))
   {
     return code ? code : std::make_error_code(std::errc::no_such_file_or_directory);
   }
