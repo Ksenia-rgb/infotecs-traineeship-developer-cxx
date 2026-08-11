@@ -4,6 +4,7 @@
 #include <cctype>
 #include <ctime>
 #include <iomanip>
+#include <filesystem>
 #include <optional>
 #include <unordered_map>
 
@@ -63,6 +64,16 @@ tecslog::Logger& tecslog::Logger::instance()
 
 std::error_code tecslog::Logger::setFile(const std::string& filename)
 {
+  namespace fs = std::filesystem;
+
+  std::error_code code;
+  fs::path file_path{filename};
+  fs::path dir_path = file_path.parent_path();
+  if (!fs::exists(dir_path, code))
+  {
+    return code ? code : std::make_error_code(std::errc::no_such_file_or_directory);
+  }
+
   if (config_filename_ != filename)
   {
     std::lock_guard< std::mutex > lock(mutex_file);

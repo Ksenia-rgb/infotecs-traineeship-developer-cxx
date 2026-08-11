@@ -5,14 +5,22 @@
 std::error_code tecslog::init(const std::string& filename, Level level)
 {
   Logger& logger = Logger::instance();
-  logger.setFile(filename);
+  std::error_code code = logger.setFile(filename);
+  if (code)
+  {
+    return code;
+  }
   return logger.setLevel(level);
 }
 
 std::error_code tecslog::init(const std::string& filename, const std::string& level)
 {
   Logger& logger = Logger::instance();
-  logger.setFile(filename);
+  std::error_code code = logger.setFile(filename);
+  if (code)
+  {
+    return code;
+  }
   return logger.setLevel(level);
 }
 
