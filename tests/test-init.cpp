@@ -1,28 +1,51 @@
-#include "test-runner.hpp"
-
 #include <tecslog/tecslog.hpp>
 
-TEST_CASE(TestIncorrectInit)
+#include "test-runner.hpp"
+
+TEST_CASE(TecslogСorrectInitTest)
 {
-  std::error_code code = tecslog::init("logs/moday.log", tecslog::Level::WARNING);
-  return code.value() == 0;
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  std::error_code code = tecslog::init(filename, tecslog::Level::WARNING);
+  bool file = tecslog::getLogFile() == filename;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::WARNING;
+
+  return code.value() == 0 && file && level;
 }
 
-TEST_CASE(TestCorrectInitWithStrLevel)
+TEST_CASE(TecslogCorrectInitWithStrLevelTest)
 {
-  std::error_code code = tecslog::init("logs/moday.log", "INFO");
-  return code.value() == 0;
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  std::error_code code = tecslog::init(filename, "INFO");
+  bool file = tecslog::getLogFile() == filename;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::INFO;
+
+  return code.value() == 0 && file && level;
 }
 
-TEST_CASE(TestIncorrectInitWithStrLevel)
+TEST_CASE(TecslogIncorrectInitWithStrLevelTest)
 {
-  std::error_code code = tecslog::init("logs/moday.log", "INCORRECT");
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  std::error_code code = tecslog::init(filename, "INCORRECT");
+  bool file = tecslog::getLogFile() == filename;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::INFO;
+
+  return code.value() != 0 && file && level;
+}
+
+TEST_CASE(TecslogIncorrectInitWithNonExistedFileTest)
+{
+  std::error_code code = tecslog::init("logs/unreal-directory/test.log", tecslog::Level::ERROR);
   return code.value() != 0;
-}
-
-
-
-int main()
-{
-  return test::runAllTests();
 }

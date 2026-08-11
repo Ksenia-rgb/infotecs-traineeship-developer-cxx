@@ -1,46 +1,86 @@
-#include "test-runner.hpp"
-
 #include <sstream>
 
 #include <tecslog/tecslog.hpp>
 
-TEST_CASE(TestCorrectSetLevel)
+#include "test-runner.hpp"
+
+TEST_CASE(TecslogCorrectSetLevelTest)
 {
-  tecslog::init("logs/moday.log", tecslog::Level::WARNING);
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  tecslog::init(filename, tecslog::Level::WARNING);
   std::error_code code = tecslog::setLevel(tecslog::Level::INFO);
-  return code.value() == 0;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::INFO;
+
+  return code.value() == 0 && level;
 }
 
-TEST_CASE(TestCorrectSetStrLevel)
+TEST_CASE(TecslogCorrctSetSameLevelTest)
 {
-  tecslog::init("logs/moday.log", "WARNING");
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  tecslog::init(filename, "ERROR");
+  std::error_code code = tecslog::setLevel(tecslog::Level::ERROR);
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::ERROR;
+
+  return code.value() == 0 && level;
+}
+
+TEST_CASE(TecslogCorrectSetStrLevelTest)
+{
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  tecslog::init(filename, "WARNING");
   std::error_code code = tecslog::setLevel("INFO");
-  return code.value() == 0;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::INFO;
+
+  return code.value() == 0 && level;
 }
 
-TEST_CASE(TestIncorrectSetStrLevel)
+TEST_CASE(TecslogIncorrectSetStrLevelTest)
 {
-  tecslog::init("logs/moday.log", "WARNING");
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  tecslog::init(filename, "WARNING");
   std::error_code code = tecslog::setLevel("INCORRECT");
-  return code.value() != 0;
+  bool level = tecslog::getDefaultLevel() == tecslog::Level::WARNING;
+
+  return code.value() != 0 && level;
 }
 
-TEST_CASE(TestPrintPossibleLevels)
+TEST_CASE(TecslogPrintPossibleLevelsTest)
 {
-  tecslog::init("logs/moday.log", tecslog::Level::WARNING);
+  tecslog::reset();
+
+  std::string filename = "test.log";
+  test::TestFileGuard guard(filename);
+
+  tecslog::init(filename, tecslog::Level::WARNING);
   
   std::stringstream sout;
   tecslog::printPossibleLevels(sout);
   return sout.str() == "0 INFO\n1 WARNING\n2 ERROR";
 }
 
-TEST_CASE(TestCorrectParseLevel)
+TEST_CASE(TecslogCorrectParseLevelTest)
 {
   std::optional< tecslog::Level > level = tecslog::parseLevel("ERROR");
   return level.has_value() && level.value() == tecslog::Level::ERROR;
 }
 
-TEST_CASE(TestIncorrectParseLevel)
+TEST_CASE(TecslogIncorrectParseLevelTest)
 {
   std::optional< tecslog::Level > level = tecslog::parseLevel("INCORRECT");
   return !level.has_value();
