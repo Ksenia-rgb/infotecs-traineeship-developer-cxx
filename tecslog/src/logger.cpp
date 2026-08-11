@@ -26,7 +26,7 @@ namespace
 }
 
 const std::string tecslog::Logger::default_filename_ = "tecslog.log";
-const tecslog::Level tecslog::Logger::default_level_ = tecslog::Level::INFO;
+const tecslog::Level tecslog::Logger::default_level_ = tecslog::Level::MIN;
 const std::unordered_map< tecslog::Level, std::string > tecslog::Logger::level_map = {
   {tecslog::Level::INFO, "INFO"},
   {tecslog::Level::WARNING, "WARNING"},
