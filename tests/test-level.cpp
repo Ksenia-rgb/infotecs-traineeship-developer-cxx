@@ -1,40 +1,40 @@
-#include "test-runner.hpp"
-
 #include <sstream>
 
 #include <tecslog/tecslog.hpp>
 
+#include "test-runner.hpp"
+
 TEST_CASE(TecslogCorrectSetLevelTest)
 {
-  tecslog::init("moday.log", tecslog::Level::WARNING);
+  tecslog::init("test.log", tecslog::Level::WARNING);
   std::error_code code = tecslog::setLevel(tecslog::Level::INFO);
   return code.value() == 0;
 }
 
 TEST_CASE(TecslogCorrctSetSameLevelTest)
 {
-  tecslog::init("moday.log", "ERROR");
+  tecslog::init("test.log", "ERROR");
   std::error_code code = tecslog::setLevel(tecslog::Level::ERROR);
   return code.value() == 0;
 }
 
 TEST_CASE(TecslogCorrectSetStrLevelTest)
 {
-  tecslog::init("moday.log", "WARNING");
+  tecslog::init("test.log", "WARNING");
   std::error_code code = tecslog::setLevel("INFO");
   return code.value() == 0;
 }
 
 TEST_CASE(TecslogIncorrectSetStrLevelTest)
 {
-  tecslog::init("moday.log", "WARNING");
+  tecslog::init("test.log", "WARNING");
   std::error_code code = tecslog::setLevel("INCORRECT");
   return code.value() != 0;
 }
 
 TEST_CASE(TecslogPrintPossibleLevelsTest)
 {
-  tecslog::init("moday.log", tecslog::Level::WARNING);
+  tecslog::init("test.log", tecslog::Level::WARNING);
   
   std::stringstream sout;
   tecslog::printPossibleLevels(sout);
