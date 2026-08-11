@@ -51,6 +51,18 @@ std::optional< tecslog::Level > tecslog::parseLevel(const std::string& str_level
   return Logger::strToLevel(str_level);
 }
 
+tecslog::Level tecslog::getDefaultLevel()
+{
+  Logger& logger = Logger::instance();
+  return logger.getDefaultLevel();
+}
+
+std::string tecslog::getLogFile()
+{
+  Logger& logger = Logger::instance();
+  return logger.getLogFile();
+}
+
 std::error_code tecslog::info(const std::string& message)
 {
   Logger& logger = Logger::instance();
