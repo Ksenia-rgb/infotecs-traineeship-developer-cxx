@@ -63,6 +63,12 @@ std::string tecslog::getLogFile()
   return logger.getLogFile();
 }
 
+void tecslog::reset()
+{
+  Logger& logger = Logger::instance();
+  return logger.reset();
+}
+
 std::error_code tecslog::info(const std::string& message)
 {
   Logger& logger = Logger::instance();
