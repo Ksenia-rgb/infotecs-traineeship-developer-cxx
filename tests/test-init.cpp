@@ -2,24 +2,29 @@
 
 #include <tecslog/tecslog.hpp>
 
-TEST_CASE(TestIncorrectInit)
+TEST_CASE(TecslogСorrectInitTest)
 {
-  std::error_code code = tecslog::init("logs/moday.log", tecslog::Level::WARNING);
+  std::error_code code = tecslog::init("moday.log", tecslog::Level::WARNING);
   return code.value() == 0;
 }
 
-TEST_CASE(TestCorrectInitWithStrLevel)
+TEST_CASE(TecslogCorrectInitWithStrLevelTest)
 {
-  std::error_code code = tecslog::init("logs/moday.log", "INFO");
+  std::error_code code = tecslog::init("moday.log", "INFO");
   return code.value() == 0;
 }
 
-TEST_CASE(TestIncorrectInitWithStrLevel)
+TEST_CASE(TecslogIncorrectInitWithStrLevelTest)
 {
-  std::error_code code = tecslog::init("logs/moday.log", "INCORRECT");
+  std::error_code code = tecslog::init("moday.log", "INCORRECT");
   return code.value() != 0;
 }
 
+TEST_CASE(TecslogIncorrectInitWithNonExistedFileTest)
+{
+  std::error_code code = tecslog::init("logs/unreal-directory/moday.log", tecslog::Level::ERROR);
+  return code.value() != 0;
+}
 
 
 int main()
