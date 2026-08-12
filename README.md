@@ -153,6 +153,9 @@ int main()
 
 `help`
 
+
+Признаком конца пользовательского ввода является EOF (на Linux: Ctrl + D | на Windows Ctrl + Z затем Enter).
+
 ### Пример использования приложения
 ```c++
 ./bin/demo-app ../logs/monday.log WARNING
