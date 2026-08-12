@@ -1,5 +1,7 @@
 # Тестовое задание для стажера по направлению *Разработчик C++*
 ## https://github.com/Ksenia-rgb/infotecs-traineeship-developer-cxx
+Второй проект с похожим заданием: https://github.com/Ksenia-rgb/infotecs-traineeship-developer-c-cxx
+
 `tecslog` - разработанная в ходе выполнения задания библиотека для записи сообщений в журнал с разными уровнями важности.
 
 `demo-app` - приложение для проверки работы библиотеки
